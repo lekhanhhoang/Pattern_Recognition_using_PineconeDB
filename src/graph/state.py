@@ -3,14 +3,14 @@ from langgraph.graph.message import add_messages
 from langchain_core.messages import BaseMessage
 
 class AgentState(TypedDict):
-    # Sử dụng add_messages để tự động quản lý lịch sử trò chuyện
+    # Lịch sử trò chuyện tự động quản lý bởi LangGraph
     messages: Annotated[list[BaseMessage], add_messages]
     
-    # Theo dõi ý định hiện tại của thí sinh (vd: diem_chuan, hoc_phi, nganh_hoc)
+    # Phân loại ý định của người dùng (vd: tra_cuu_ielts, hoi_dap_ngu_phap, yeu_cau_cham_diem)
     current_intent: str
     
-    # Thông tin hồ sơ học sinh (nguyện vọng, khối xét tuyển, điểm thi dự kiến, v.v.)
+    # Hồ sơ học viên (Mục tiêu điểm Band Score, Kỹ năng yếu, Lịch thi dự kiến)
     student_profile: Dict[str, Any]
     
-    # Tác nhân tiếp theo sẽ được gọi
+    # Tác nhân (node) tiếp theo sẽ được gọi trong luồng LangGraph
     next: str

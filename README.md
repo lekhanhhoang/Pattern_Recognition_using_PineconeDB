@@ -1,18 +1,18 @@
-# 🎓 Hệ thống Tư vấn Tuyển sinh Giáo dục Đại học
+# 🎓 Hệ thống Trợ giảng Luyện thi IELTS (AI-Powered)
 
 [![Framework](https://img.shields.io/badge/Framework-LangChain-green)](https://python.langchain.com/)
 [![Graph](https://img.shields.io/badge/Orchestration-LangGraph-blue)](https://langchain-ai.github.io/langgraph/)
-[![Database](https://img.shields.io/badge/VectorDB-ChromaDB-orange)](https://www.trychroma.com/)
+[![Database](https://img.shields.io/badge/VectorDB-Pinecone-orange)](https://www.pinecone.io/)
 [![UI](https://img.shields.io/badge/Frontend-Streamlit-red)](https://streamlit.io/)
 
 ## 📖 Giới thiệu
-Dự án xây dựng một **AI Agent** chuyên dụng để hỗ trợ tư vấn tuyển sinh cho trường Đại học Công nghệ XYZ. Hệ thống sử dụng kiến trúc **RAG (Retrieval-Augmented Generation)** để cung cấp thông tin chính xác từ các tài liệu đề án tuyển sinh (PDF) và tra cứu điểm chuẩn từ cơ sở dữ liệu có cấu trúc (JSON).
+Dự án xây dựng một **AI Agent** chuyên dụng để hỗ trợ ôn luyện và tư vấn thi IELTS. Hệ thống sử dụng kiến trúc **RAG (Retrieval-Augmented Generation)** để cung cấp thông tin học thuật chuẩn xác được cào (crawl) tự động từ trang web của cựu giám khảo bản xứ **IELTS Simon (ielts-simon.study)**.
 
-Hệ thống được thiết kế để hoạt động như một chuyên viên tư vấn chuyên nghiệp, chính xác và thân thiện, giúp thí sinh và phụ huynh giải đáp các thắc mắc về:
-*   Điểm chuẩn các năm.
-*   Chỉ tiêu và tổ hợp xét tuyển.
-*   Học phí và các chính sách ưu đãi.
-*   Quy chế tuyển sinh và các mốc thời gian quan trọng.
+Hệ thống được thiết kế để hoạt động như một chuyên gia IELTS 8.5+ chuyên nghiệp, hỗ trợ học viên giải đáp các thắc mắc về:
+*   Mẹo giải bài thi Reading (True/False/Not Given, Matching Headings...).
+*   Cách viết Overview và cấu trúc đoạn văn cho Writing Task 1 & 2.
+*   Từ vựng học thuật (Academic Vocabulary) cho Speaking & Listening.
+*   Phương pháp học chuẩn tư duy giám khảo chấm thi.
 
 ---
 
@@ -30,36 +30,30 @@ Hệ thống được thiết kế để hoạt động như một chuyên viên
 ## 👤 Thành viên thực hiện
 | Họ tên | Vai trò | Công việc phụ trách |
 | :--- | :--- | :--- |
-| **Lê Khánh Hoàng** | Trưởng nhóm | Phát triển hệ thống AI, Xây dựng kiến trúc LangGraph, RAG và Frontend |
+| **Lê Khánh Hoàng** | Trưởng nhóm | Phát triển hệ thống AI, Xây dựng kiến trúc LangGraph, Web Scraping và Pinecone RAG |
 | **Trương Xuân Hưng** | Thành viên | Xây dựng nội dung báo cáo Chương 11 và Chương 12 |
 | **Lê Quốc Nam** | Thành viên | Xây dựng nội dung báo cáo Chương 1, Chương 2 và Chương 3 |
 ---
 
 ## 🏗️ Kiến trúc hệ thống
 Hệ thống được xây dựng dựa trên quy trình **Reasoner-ToolNode** của LangGraph:
-1.  **Reasoner (Bộ não)**: Sử dụng mô hình LLM Qwen2.5 để phân tích câu hỏi của người dùng.
+1.  **Reasoner (Bộ não)**: Sử dụng mô hình LLM Qwen2.5-72B để phân tích câu hỏi của người dùng.
 2.  **Tools (Công cụ)**:
-    *   `tra_cuu_thong_tin`: Truy xuất dữ liệu từ mã nguồn PDF (RAG).
-    *   `tra_cuu_diem_chuan`: Tra cứu dữ liệu có cấu trúc từ tệp JSON.
-3.  **State Management**: Quản lý lịch sử hội thoại và thông tin hồ sơ thí sinh theo thời gian thực.
+    *   `tra_cuu_tai_lieu_ielts`: Truy xuất dữ liệu bài giảng từ máy chủ Pinecone VectorDB (đã quét 1.972 chunks từ web IELTS Simon).
+3.  **State Management**: Quản lý lịch sử hội thoại liên tục bằng LangGraph MemorySaver.
 
 ---
 
 ## 📂 Cấu trúc thư mục
 ```text
-CNLTHD-LANGCHAIN-NHOM20/
-├── data/
-│   ├── admissions/      # Chứa tệp PDF đề án tuyển sinh
-│   └── diem_chuan_2025.json # Dữ liệu điểm chuẩn có cấu trúc
+IELTS-RAG-SYSTEM/
 ├── src/
-│   ├── agents/          # Định nghĩa persona và logic điều phối
-│   ├── graph/           # Xây dựng luồng workflow (State, Nodes, Graph)
-│   └── tools/           # Các công cụ tra cứu dữ liệu
-├── chroma_db/           # Cơ sở dữ liệu vector lưu trữ embeddings
+│   ├── graph/           # Xây dựng luồng workflow (State, Nodes, Graph) và System Prompt
+│   └── tools/           # Các công cụ RAG (ielts_tools.py)
 ├── frontend1.py         # Giao diện người dùng Streamlit
-├── ingest.py            # Script nạp dữ liệu từ PDF vào VectorDB
-├── requirements.txt     # Danh sách thư viện phụ thuộc
-└── .env                 # Cấu hình biến môi trường (HF_TOKEN)
+├── ingest.py            # Script cào web bằng RecursiveUrlLoader và nạp vào Pinecone
+├── requirements.txt     # Danh sách thư viện phụ thuộc (đã tối ưu clean code)
+└── .env                 # Cấu hình biến môi trường (HF_TOKEN, PINECONE_API_KEY)
 ```
 
 ---
@@ -71,21 +65,22 @@ Yêu cầu Python 3.10 trở lên. Khuyến khích sử dụng [uv](https://gith
 
 ### 2. Cài đặt thư viện
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### 3. Cấu hình biến môi trường
-Tạo tệp `.env` tại thư mục gốc và thêm mã Hugging Face Token:
+Tạo tệp `.env` tại thư mục gốc và cung cấp các khóa API:
 ```env
 HF_TOKEN=your_huggingface_token_here
+PINECONE_API_KEY=your_pinecone_api_key_here
 ```
 
 ---
 
 ## 🚀 Hướng dẫn sử dụng
 
-### Bước 1: Nạp dữ liệu tuyển sinh
-Bỏ tệp PDF đề án vào `data/admissions/De_an_tuyen_sinh_2026.pdf` và chạy:
+### Bước 1: Nạp dữ liệu IELTS (Crawling & Embedding)
+Chạy kịch bản cào dữ liệu từ `ielts-simon.study` và lưu lên Pinecone:
 ```bash
 python ingest.py
 ```
@@ -99,7 +94,7 @@ streamlit run frontend1.py
 
 ## 💻 Công nghệ sử dụng
 *   **Ngôn ngữ**: Python
-*   **LLM**: Qwen2.5 (via Hugging Face API)
+*   **LLM**: Qwen2.5-72B (via Hugging Face API)
 *   **Framework**: LangChain, LangGraph
-*   **Vector Database**: ChromaDB (với HuggingFace Embeddings)
+*   **Vector Database**: Pinecone Cloud Database (HuggingFace Embeddings)
 *   **Interface**: Streamlit
