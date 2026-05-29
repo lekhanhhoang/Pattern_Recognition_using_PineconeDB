@@ -2,7 +2,7 @@ import streamlit as st
 import uuid
 
 # --- CẤU HÌNH TRANG VÀ UI (ĐẶT Ở ĐẦU ĐỂ CHẠY NHANH NHẤT) ---
-st.set_page_config(page_title="Hệ thống Tư vấn Tuyển sinh", page_icon="🎓")
+st.set_page_config(page_title="AI Tư vấn IELTS", page_icon="📝")
 
 # --- CUSTOM CSS FOR LOADING ANIMATION ---
 st.markdown("""
@@ -52,7 +52,7 @@ st.markdown("""
 from langchain_core.messages import HumanMessage, AIMessage
 from src.graph.workflow import app
 
-st.title("🎓 Hệ thống Tư vấn Tuyển sinh Giáo dục Đại học")
+st.title("📝 Hệ thống Trợ giảng Luyện thi IELTS (AI-Powered)")
 st.markdown("---")
 
 # Khởi tạo session state
@@ -71,7 +71,7 @@ for msg in st.session_state.messages:
         st.markdown(msg.content)
 
 # Ô nhập yêu cầu
-if prompt := st.chat_input("Hỏi về điểm chuẩn, học phí, ngành học hoặc đề án tuyển sinh..."):
+if prompt := st.chat_input("Hỏi cách làm bài Reading, mẫu câu Writing, luyện Speaking..."):
     # Lưu tin nhắn người dùng
     st.session_state.messages.append(HumanMessage(content=prompt))
     with st.chat_message("user"):

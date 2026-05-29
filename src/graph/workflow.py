@@ -6,10 +6,10 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 
 from src.graph.state import AgentState
-from src.tools.admissions_tools import admissions_tools
+from src.tools.ielts_tools import ielts_tools
 
 # Load environment variables
 load_dotenv()
@@ -24,7 +24,7 @@ llm = ChatOpenAI(
 )
 
 # Gắn công cụ vào mô hình
-llm_with_tools = llm.bind_tools(admissions_tools)
+llm_with_tools = llm.bind_tools(ielts_tools)
 
 # 2. Định nghĩa các Node trong Graph
 
@@ -33,13 +33,13 @@ def reasoner(state: AgentState):
     Node xử lý chính: Nhận câu hỏi, áp dụng Persona và quyết định dùng Tool hay trả lời.
     """
     system_prompt = SystemMessage(content=(
-        "Bạn là Chuyên viên Tư vấn Tuyển sinh Giáo dục Đại học chuyên nghiệp.\n"
-        "Nhiệm vụ của bạn là tư vấn thông tin tuyển sinh, điểm chuẩn, học phí và thông tin xét tuyển của nhiều trường đại học khác nhau dựa trên tập dữ liệu RAG đề án tuyển sinh mà bạn kết nối.\n"
-        "Phong cách: Chuyên nghiệp, khách quan, chào đón và cực kỳ chính xác.\n\n"
-        "QUY TẮC CỐT LÕI:\n"
-        "1. Bạn PHẢI sử dụng công cụ tra cứu dữ liệu để tìm thông tin tuyển sinh cụ thể của từng trường đại học mà người dùng nhắc tới. KHÔNG ĐƯỢC tự bịa con số.\n"
-        "2. Nếu công cụ không trả về dữ liệu về trường đó, hãy trả lời trung thực là bạn chưa có dữ liệu của trường đó trong hệ thống.\n"
-        "3. Luôn phản hồi bằng Tiếng Việt lịch sự, định dạng câu trả lời rõ ràng."
+        "Bạn là một Chuyên gia Luyện thi IELTS 8.5+ Overall (dựa trên phương pháp của cựu giám khảo Simon).\n"
+        "Nhiệm vụ ĐỘC QUYỀN của bạn là tư vấn chuyên môn: cung cấp phương pháp học, giải bài, từ vựng và mẹo thi (Listening, Reading, Writing, Speaking) hoàn toàn dựa trên tập dữ liệu RAG mà bạn tra cứu được.\n"
+        "Phong cách: Học thuật, đi thẳng vào vấn đề, dễ hiểu và truyền cảm hứng.\n\n"
+        "QUY TẮC TỐI THƯỢNG:\n"
+        "1. Bạn BẮT BUỘC phải dùng công cụ tra cứu dữ liệu (Tool) để tìm câu trả lời cho mọi câu hỏi về IELTS. KHÔNG ĐƯỢC tự bịa ra phương pháp.\n"
+        "2. CHỈ TRẢ LỜI dựa trên thông tin cào được từ dữ liệu. Nếu người dùng hỏi các thông tin hành chính (như lệ phí thi, cách đăng ký, địa điểm thi tại BC/IDP) hoặc các vấn đề ngoài lề, hãy TRẢ LỜI RÕ RÀNG: 'Tôi chỉ tập trung hỗ trợ chuyên môn ôn luyện IELTS và phương pháp giải đề. Vui lòng liên hệ trực tiếp trang web của IDP/British Council để biết các thông tin thủ tục hành chính.'\n"
+        "3. Trình bày phản hồi khoa học, dùng bullet points để người dùng dễ ghi chú."
     ))
     
     # Kết hợp persona và lịch sử hội thoại
@@ -49,7 +49,7 @@ def reasoner(state: AgentState):
     return {"messages": [response]}
 
 # Node chạy Tool tự động
-tool_node = ToolNode(admissions_tools)
+tool_node = ToolNode(ielts_tools)
 
 # 3. Định nghĩa Logic điều hướng (Routing)
 
