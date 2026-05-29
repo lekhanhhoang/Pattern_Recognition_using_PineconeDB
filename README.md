@@ -27,12 +27,10 @@ Hệ thống được thiết kế để hoạt động như một chuyên gia I
 
 ---
 
-## 👤 Thành viên thực hiện
+## 👤 Người thực hiện
 | Họ tên | Vai trò | Công việc phụ trách |
 | :--- | :--- | :--- |
-| **Lê Khánh Hoàng** | Trưởng nhóm | Phát triển hệ thống AI, Xây dựng kiến trúc LangGraph, Web Scraping và Pinecone RAG |
-| **Trương Xuân Hưng** | Thành viên | Xây dựng nội dung báo cáo Chương 11 và Chương 12 |
-| **Lê Quốc Nam** | Thành viên | Xây dựng nội dung báo cáo Chương 1, Chương 2 và Chương 3 |
+| **Lê Khánh Hoàng** | Tác giả | Phát triển toàn bộ hệ thống AI, Xây dựng kiến trúc LangGraph, Web Scraping, Pinecone RAG và viết Báo cáo |
 ---
 
 ## 🏗️ Kiến trúc hệ thống
